@@ -125,7 +125,7 @@
         for ($i = 0; $i < 42; $i++) {
             $days = strtotime("+$i day", $tableFirstDay);
             $color = (date('m', $days) !== $month) ? 'color:lightgray' : '';
-            echo '<div class="day-item" style=' . $color . '>
+            echo '<div class="day-item" data-date=' . date('Y-m-d', $days) .' style=' . $color . '>
                         ' . date('d', $days) . '</div>';
         }
     echo "</div>";
@@ -150,6 +150,47 @@
                         }
                     }
                 })
+                // 所有新增的辦事項，存在 todos 陣列裡
+                let todos = [];
+                // 命名叫 saveTodos 的函式，將 todos 陣列存到瀏覽器的 localStorage
+                function saveTodos() {
+                    // 把 todos 陣列轉成 JSON 純文字，因為 localStorage 只能識別純文字
+                    const jsonString = JSON.stringify(todos);
+                    // 存入 localStorage，並給 key 命名為 monsterCalendarTodos
+                    localStorage.setItem('monsterCalendarTodos', jsonString);
+                    console.log('資料存好了!!!')
+                }
+                // 從 localStorage 取出資料， 放到 todos 陣列
+                function loadTodos() {
+                    // 從 localStorage 取出 key 為 'monsterCalendarTodos'和 value
+                    // localStorage.getItem 取出的資料會變成 JSON純文字檔
+                    const saveDate = localStorage.getItem('monsterCalendarTodos')
+
+                    if (saveDate) {
+                        // 如果在 localStorage 的 'monsterCalendarTodos'的 value
+                        // 有值的話，將 saveDate 的 JSON純文字檔，轉回 JS 的陣列或物件
+                        todos = JSON.parse(saveDate);
+                        console.log('已經存過資料了~')
+                    } else {
+                        // 如果沒有，維持空陣列
+                        todos = []
+                        console.log('localStorage 沒有資料啦~')
+                    }
+                }
+
+                function addTodoCalendar(dateKey, todoText) {
+                    const newTodo = {
+                        id: Date.now(),
+                        date: dateKey,
+                        text: todoText,
+                        completed: false,
+                    };
+
+                    todos.push(newTodo)
+
+                    saveTodos()
+
+                }
                 </script>
             </div>
         </div>
