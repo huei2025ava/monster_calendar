@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>怪獸電力公司萬年曆</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Varela+Round&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* CSS 變數定義怪獸風格主色調 */
+      :root {
+        --sulley-blue: #33a2e5;
+        /* 毛怪藍 */
+        --mike-green: #90d344;
+        /* 麥克綠 */
+        --purple-patch: #855e97;
+        /* 紫色斑點/裝飾 */
+        --eye-white: #ffffff;
+        /* 眼睛白 */
+        --deep-shadow: #1e6091;
+        /* 深藍陰影 (主要陰影色) */
+        --light-border: rgba(0, 0, 0, 0.1);
+        /* 輕微邊界色 */
+      }
+
+      body {
+        font-family: "Varela Round", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--sulley-blue) 0%,
+          var(--purple-patch) 100%
+        );
+        color: var(--deep-shadow);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .two-pane-container {
+        display: flex;
+        width: 1200px;
+        max-width: 95%;
+        background-color: var(--eye-white);
+        border-radius: 40px;
+        border: 8px solid var(--mike-green);
+        box-shadow: 0 15px 30px var(--deep-shadow),
+          0 0 0 15px var(--sulley-blue);
+        overflow: hidden;
+      }
+
+      /* --- 左側小月曆樣式 --- */
+      .mini-calendar-pane {
+        width: 280px;
+        padding: 30px 20px;
+        background-color: var(--sulley-blue);
+        color: var(--eye-white);
+        border-right: 5px solid var(--mike-green);
+        flex-shrink: 0;
+        position: relative;
+        /* 用於定位 TODAY 按鈕 */
+      }
+
+      .mini-calendar-pane h3 {
+        font-family: "Bungee", cursive;
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        color: var(--eye-white);
+        text-shadow: 1px 1px 0 var(--deep-shadow);
+      }
+
+      .mini-calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      /* 小月曆導航圖片按鈕 */
+      .mini-nav-arrow {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        filter: drop-shadow(2px 2px 0 var(--deep-shadow));
+      }
+
+      .mini-nav-arrow img {
+        width: 30px;
+        /* 圖片大小 */
+        height: auto;
+      }
+
+      .mini-month-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--eye-white);
+      }
+
+      .mini-weekdays,
+      .mini-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px;
+        text-align: center;
+      }
+
+      .mini-weekdays {
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        color: var(--eye-white);
+        /* 星期文字白色 */
+      }
+
+      .mini-day-item {
+        padding: 5px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+        transition: background-color 0.1s;
+        color: var(--eye-white);
+        /* 日期數字白色 */
+      }
+
+      .mini-day-item:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .mini-day-item.today {
+        background-color: var(--mike-green);
+        color: var(--deep-shadow);
+        font-weight: 700;
+      }
+
+      /* TODAY 按鈕 (開門動畫 + 閃爍陰影) */
+      .door-box {
+        width: 282px;
+        height: 282px;
+        margin: 100px auto;
+        position: relative;
+        /* 移除 overflow: hidden; 讓陰影可以自由向外擴散，不被裁切。 */
+        /* overflow: hidden; */
+        background: transparent;
+        cursor: pointer;
+      }
+
+      /* 門本體 */
+      .door {
+        width: 282px;
+        height: 282px;
+        background: url("./image/door.png") no-repeat;
+        background-size: 3948px 282px; /* 14格總寬度 */
+        image-rendering: pixelated;
+        background-position: 0 0;
+        transition: none !important;
+
+        /* ==== 這裡是重點：閃爍陰影 ==== */
+        /* 預設一直閃（非 hover 時） */
+        animation: shadowFlicker 1.4s infinite alternate;
+
+        /* 發光+陰影效果（可調整顏色跟強度） */
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8))
+          drop-shadow(0 0 40px rgba(0, 255, 255, 0.6));
+      }
+
+      /* ==== 滑鼠移入時：停止閃爍 + 移除陰影（乾淨開門）==== */
+      .door-box:hover .door {
+        animation: openDoor 0.56s steps(13) forwards, shadowFlicker 0s paused; /* 強制暫停閃爍 */
+        filter: drop-shadow(
+          0 0 8px rgba(255, 255, 255, 0.4)
+        ); /* 開門時只留淡淡陰影 */
+      }
+
+      /* 滑鼠離開後恢復閃爍 + 倒播 */
+      .door-box:not(:hover) .door {
+        animation: closeDoor 0.56s steps(13) forwards,
+          shadowFlicker 1.4s infinite alternate 0.56s; /* 倒播完 0.56s 後再開始閃 */
+      }
+
+      /* 正播 0→13 */
+      @keyframes openDoor {
+        from {
+          background-position: 0px 0;
+        }
+        to {
+          background-position: -3666px 0;
+        }
+      }
+
+      /* 倒播 13→0 */
+      @keyframes closeDoor {
+        from {
+          background-position: -3666px 0;
+        }
+        to {
+          background-position: 0px 0;
+        }
+      }
+
+      /* 閃爍陰影動畫 */
+      @keyframes shadowFlicker {
+        0% {
+          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))
+            drop-shadow(0 0 20px rgba(0, 204, 255, 0));
+        }
+        50% {
+          filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9))
+            drop-shadow(0 0 50px rgba(0, 255, 255, 0.8));
+        }
+        100% {
+          filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5))
+            drop-shadow(0 0 35px rgba(0, 255, 204, 0.4));
+        }
+      }
+      /* --- 右側大月曆樣式 --- */
+      .main-calendar-pane {
+        flex-grow: 1;
+        padding: 30px;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      /* 標語樣式 */
+      .slogan {
+        font-family: "Bungee", cursive;
+        font-size: 1.8rem;
+        color: var(--purple-patch);
+        letter-spacing: 5px;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 0 var(--mike-green);
+      }
+
+      .month-nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .month-title {
+        font-family: "Bungee", cursive;
+        font-size: 4rem;
+        letter-spacing: 5px;
+        color: var(--mike-green);
+        text-shadow: 3px 3px 0 var(--deep-shadow);
+        margin: 0 20px;
+      }
+
+      /* 主月曆導航圖片按鈕 */
+      .main-nav-arrow {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        /* 確保圖片能對齊 */
+        align-items: center;
+        height: 60px;
+        /* 圖片高度 */
+      }
+
+      .main-nav-arrow img {
+        height: 60px;
+        /* 圖片大小 */
+        width: auto;
+        filter: drop-shadow(2px 2px 0 var(--deep-shadow));
+      }
+
+      /* 日期網格 */
+      .weekdays,
+      .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: left;
+      }
+
+      .weekdays {
+        border-bottom: 3px dashed var(--purple-patch);
+        margin-bottom: 0;
+        padding-bottom: 5px;
+        /* 圖片中有間距 */
+      }
+
+      .weekday-item {
+        font-family: "Bungee", cursive;
+        color: var(--purple-patch);
+        padding: 10px 10px 10px 5px;
+        font-size: 1rem;
+        font-weight: 400;
+        border-right: 1px dotted var(--light-border);
+        /* 點狀分隔線 */
+      }
+
+      .weekday-item:last-child {
+        border-right: none;
+      }
+
+      /* --- 日期數字樣式：格子與邊界處理 --- */
+      .day-item {
+        height: 120px;
+        border: 1px solid var(--light-border);
+        border-top: none;
+        /* 讓格子線條更簡潔 */
+        border-left: none;
+        padding: 5px;
+        overflow: hidden;
+        cursor: pointer;
+        background-color: var(--eye-white);
+        transition: background-color 0.1s;
+      }
+
+      .day-item:nth-child(7n) {
+        border-right: none;
+      }
+
+      .day-item:first-child,
+    /* 第一個格子 */
+    .day-item:nth-child(8),
+    /* 每行第一個格子 (如果第一行不是從1開始) */
+    .days>div:nth-child(7n+1):not(.empty) {
+        /* 確保每行第一個有左邊界 */
+        /* 圖片上看起來沒有最左邊的垂直線，這裡不特別處理，保持整體格子的樣式 */
+      }
+
+      /* 移除最右側的垂直線 */
+      .days > div:nth-child(7n):not(.empty) {
+        border-right: none;
+      }
+
+      /* 移除最下面的水平線 (最後一行) */
+      .days > div:nth-last-child(-n + 7) {
+        /* border-bottom: none; */
+      }
+
+      .day-item:hover {
+        background-color: #f5f5f5;
+      }
+
+      .day-number {
+        font-family: "Varela Round", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--deep-shadow);
+        margin-bottom: 5px;
+      }
+
+      .today .day-number {
+        color: var(--eye-white);
+        background-color: var(--purple-patch);
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px var(--mike-green);
+      }
+
+      /* 圖片中今天的日期有綠色光暈 */
+      .day-item.today {
+        box-shadow: 0 0 10px var(--mike-green) inset, 0 0 10px var(--mike-green);
+      }
+
+      /* 前一個月和下一個月的日期 */
+      .day-item.prev-month .day-number,
+      .day-item.next-month .day-number {
+        color: rgba(0, 0, 0, 0.3);
+        /* 灰色，減淡 */
+      }
+
+      /* 代辦事項/活動的風格 */
+      .event {
+        background-color: var(--mike-green);
+        color: var(--eye-white);
+        padding: 3px 5px;
+        margin-top: 5px;
+        /* 與日期數字有間隔 */
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: grab;
+        box-shadow: 0 2px 0 var(--deep-shadow);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="two-pane-container">
+      <div class="mini-calendar-pane">
+        <h3>NOVEMBER</h3>
+
+        <div class="mini-calendar-nav">
+          <button class="mini-nav-arrow">
+            <img src="./image/arrow_light_left.png" alt="Previous Month" />
+          </button>
+          <div class="mini-month-title">2025</div>
+          <button class="mini-nav-arrow">
+            <img src="./image/arrow_light_right.png" alt="Next Month" />
+          </button>
+        </div>
+
+        <div class="mini-weekdays" style="margin-top: 15px">
+          <div>S</div>
+          <div>M</div>
+          <div>T</div>
+          <div>W</div>
+          <div>T</div>
+          <div>F</div>
+          <div>S</div>
+        </div>
+
+        <div class="mini-days">
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item empty"></div>
+          <div class="mini-day-item">1</div>
+
+          <div class="mini-day-item">2</div>
+          <div class="mini-day-item">3</div>
+          <div class="mini-day-item">4</div>
+          <div class="mini-day-item">5</div>
+          <div class="mini-day-item">6</div>
+          <div class="mini-day-item">7</div>
+          <div class="mini-day-item">8</div>
+
+          <div class="mini-day-item">9</div>
+          <div class="mini-day-item">10</div>
+          <div class="mini-day-item">11</div>
+          <div class="mini-day-item">12</div>
+          <div class="mini-day-item">13</div>
+          <div class="mini-day-item">14</div>
+          <div class="mini-day-item">15</div>
+
+          <div class="mini-day-item">16</div>
+          <div class="mini-day-item today">18</div>
+          <div class="mini-day-item">19</div>
+          <div class="mini-day-item">20</div>
+          <div class="mini-day-item">21</div>
+          <div class="mini-day-item">22</div>
+
+          <div class="mini-day-item">23</div>
+          <div class="mini-day-item">24</div>
+          <div class="mini-day-item">25</div>
+          <div class="mini-day-item">26</div>
+          <div class="mini-day-item">27</div>
+          <div class="mini-day-item">28</div>
+          <div class="mini-day-item">29</div>
+
+          <div class="mini-day-item">30</div>
+        </div>
+
+        <div class="door-box">
+          <div class="door"></div>
+        </div>
+      </div>
+
+      <div class="main-calendar-pane">
+        <div class="header">
+          <div class="slogan">WE SCARE BECAUSE WE CARE</div>
+
+          <div class="month-nav-container">
+            <button class="main-nav-arrow">
+              <img src="./image/arrow_light_left.png" alt="Previous Month" />
+            </button>
+            <div class="month-title">MARCH 2026</div>
+            <button class="main-nav-arrow">
+              <img src="./image/arrow_light_right.png" alt="Next Month" />
+            </button>
+          </div>
+        </div>
+
+        <div class="weekdays">
+          <div>SUN</div>
+          <div>MON</div>
+          <div>TUE</div>
+          <div>WED</div>
+          <div>THU</div>
+          <div>FRI</div>
+          <div>SAT</div>
+        </div>
+
+        <div class="days">
+          <div class="day-item empty"></div>
+          <div class="day-item empty"></div>
+          <div class="day-item empty"></div>
+          <div class="day-item empty"></div>
+          <div class="day-item empty"></div>
+          <div class="day-item empty"></div>
+          <div class="day-item" data-date="2026-03-01">
+            <div class="day-number">1</div>
+            <div class="event" draggable="true" data-id="e1">個人特訓</div>
+          </div>
+
+          <div class="day-item" data-date="2026-03-02">
+            <div class="day-number">2</div>
+          </div>
+          <div class="day-item" data-date="2026-03-03">
+            <div class="day-number">3</div>
+          </div>
+          <div class="day-item" data-date="2026-03-04">
+            <div class="day-number">4</div>
+          </div>
+          <div class="day-item" data-date="2026-03-05">
+            <div class="day-number">5</div>
+          </div>
+          <div class="day-item" data-date="2026-03-06">
+            <div class="day-number">6</div>
+          </div>
+          <div class="day-item" data-date="2026-03-07">
+            <div class="day-number">7</div>
+          </div>
+          <div class="day-item" data-date="2026-03-08">
+            <div class="day-number">8</div>
+          </div>
+
+          <div class="day-item" data-date="2026-03-09">
+            <div class="day-number">9</div>
+          </div>
+          <div class="day-item" data-date="2026-03-10">
+            <div class="day-number">10</div>
+          </div>
+          <div class="day-item" data-date="2026-03-11">
+            <div class="day-number">11</div>
+          </div>
+          <div class="day-item" data-date="2026-03-12">
+            <div class="day-number">12</div>
+          </div>
+          <div class="day-item" data-date="2026-03-13">
+            <div class="day-number">13</div>
+          </div>
+          <div class="day-item" data-date="2026-03-14">
+            <div class="day-number">14</div>
+          </div>
+          <div class="day-item" data-date="2026-03-15">
+            <div class="day-number">15</div>
+          </div>
+
+          <div class="day-item" data-date="2026-03-16">
+            <div class="day-number">16</div>
+          </div>
+          <div class="day-item today" data-date="2026-03-17">
+            <div class="day-number">17</div>
+            <div class="event" draggable="true" data-id="e2">
+              怪獸電力公司會議
+            </div>
+          </div>
+          <div class="day-item" data-date="2026-03-18">
+            <div class="day-number">18</div>
+          </div>
+          <div class="day-item" data-date="2026-03-19">
+            <div class="day-number">19</div>
+          </div>
+          <div class="day-item" data-date="2026-03-20">
+            <div class="day-number">20</div>
+          </div>
+          <div class="day-item" data-date="2026-03-21">
+            <div class="day-number">21</div>
+          </div>
+          <div class="day-item" data-date="2026-03-22">
+            <div class="day-number">22</div>
+          </div>
+
+          <div class="day-item" data-date="2026-03-23">
+            <div class="day-number">23</div>
+          </div>
+          <div class="day-item" data-date="2026-03-24">
+            <div class="day-number">24</div>
+          </div>
+          <div class="day-item" data-date="2026-03-25">
+            <div class="day-number">25</div>
+          </div>
+          <div class="day-item" data-date="2026-03-26">
+            <div class="day-number">26</div>
+          </div>
+          <div class="day-item" data-date="2026-03-27">
+            <div class="day-number">27</div>
+          </div>
+          <div class="day-item" data-date="2026-03-28">
+            <div class="day-number">28</div>
+          </div>
+          <div class="day-item" data-date="2026-03-29">
+            <div class="day-number">29</div>
+          </div>
+
+          <div class="day-item" data-date="2026-03-30">
+            <div class="day-number">30</div>
+          </div>
+          <div class="day-item" data-date="2026-03-31">
+            <div class="day-number">31</div>
+          </div>
+          <div class="day-item next-month" data-date="2026-04-01">
+            <div class="day-number">1</div>
+          </div>
+          <div class="day-item next-month" data-date="2026-04-02">
+            <div class="day-number">2</div>
+          </div>
+          <div class="day-item next-month" data-date="2026-04-03">
+            <div class="day-number">3</div>
+          </div>
+          <div class="day-item next-month" data-date="2026-04-04">
+            <div class="day-number">4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
