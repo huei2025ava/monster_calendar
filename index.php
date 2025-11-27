@@ -131,22 +131,26 @@
     echo "</div>";
     ?>
                 <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadTodos()
+                })
+
                 // 監聽所有HTML，有發生 click 的事件
                 document.addEventListener('click', function(event) {
                     // 點擊到.day-item的格子裡
                     const clickedCell = event.target.closest('.day-item');
-                    // 如果點擊到.day-item的格子裡，並且 clickedCell 裡的文字不是空白
-                    if (clickedCell && clickedCell.innerText.trim() !== "") {
+
+                    // 從點擊到的.day-item的取得 data-date的值
+                    const dateKey = clickedCell ? clickedCell.dataset.date : null;
+
+                    // 如果點擊到.day-item的格子裡，並且 clickedCell 裡的文字不是空白，同時有 data-date的值
+                    if (clickedCell && clickedCell.innerText.trim() !== "" && dateKey) {
                         // prompt 彈出小視窗，暫停程式，直到使用者輸入完畢或按取消
                         const todoText = prompt("請輸入怪獸代辦事項：")
-                        if (todoText) {
-                            // newNote 新增 <div></div> 元素
-                            const newNote = document.createElement('div')
-                            // newNote 新增 <div></div> 裡的文字
-                            newNote.innerHTML = "👾 " + todoText;
-                            newNote.className = 'monster-note';
-                            // 把 newNote 例如<div>👾 驚嚇課程 </div>，放在 clickedCell，appendChild是如果你同一個格子加兩次代辦事項，第二個會排在第一個下面，不會把第一個蓋掉
-                            clickedCell.appendChild(newNote)
+
+                        // 有todoText 同時 todoText 移除字串開頭和結尾的空白字元，不是空白
+                        if (todoText && todoText.trim() !== "") {
+                            addTodoCalendar(dateKey, todoText.trim())
                         }
                     }
                 })
@@ -176,6 +180,7 @@
                         todos = []
                         console.log('localStorage 沒有資料啦~')
                     }
+                    renderTodos()
                 }
 
                 function addTodoCalendar(dateKey, todoText) {
@@ -190,6 +195,31 @@
 
                     saveTodos()
 
+                    renderTodos()
+
+                }
+                // 將 todos 陣列的資料畫出來  
+                function renderTodos() {
+                    // 清空所有代辦事項，避免重複，保證和 todos 陣列完全一樣
+                    document.querySelectorAll('.monster-note').forEach(note => {
+                        note.remove()
+                    });
+                    todos.forEach(todo => {
+                        // 找到 data-date 是 ${todo.date} 的日曆格
+                        const targetCell = document.querySelector(`.day-item[data-date="${todo.date}"]`)
+
+                        // 有找到 targetCell，newNote 新增一個<div></div>
+                        if (targetCell) {
+                            const newNote = document.createElement('div');
+
+                            // newNote 新增 <div></div> 裡的文字
+                            newNote.innerHTML = "👾 " + todo.text;
+                            newNote.className = 'monster-note';
+
+                            // 把 newNote 例如<div>👾 驚嚇課程 </div>，放在 clickedCell，appendChild是如果你同一個格子加兩次代辦事項，第二個會排在第一個下面，不會把第一個蓋掉
+                            targetCell.appendChild(newNote)
+                        }
+                    })
                 }
                 </script>
             </div>
