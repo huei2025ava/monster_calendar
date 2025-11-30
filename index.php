@@ -11,7 +11,6 @@
 </head>
 
 <body>
-
   <?php
     date_default_timezone_set('Asia/Taipei');
     $current_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
