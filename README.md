@@ -52,7 +52,11 @@
 ├── image/
 │   ├── door.png           ← 14 幀的怪獸之門 sprite
 │   ├── arrow_light_left.png
-│   └── arrow_light_right.png
+│   ├── arrow_light_right.png
+│   ├── screenshot-add.png
+│   ├── screenshot-detail.png
+│   ├── screenshot-door.png
+│   └── screenshot-hero.png
 └── README.md              ← 就是你現在看的這個！
 ```
 
