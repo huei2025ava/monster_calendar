@@ -2,18 +2,19 @@
 <html lang="zh-TW">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>怪獸電力公司萬年曆</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>怪獸電力公司萬年曆</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Varela+Round&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Varela+Round&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-    <?php
-      $current_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+  <?php
+    date_default_timezone_set('Asia/Taipei');
+    $current_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
     $current_month = isset($_GET['month']) ? $_GET['month'] : date('m');
     $current_date_string = $current_year . "-" . $current_month . "-01";
     $base_timestamp = strtotime($current_date_string);
@@ -36,208 +37,525 @@
     ?>
 
 
-    <div class="two-pane-container">
-        <div class="mini-calendar-pane">
-            <h3><?php echo date("F", $base_timestamp); ?></h3>
+  <div class="two-pane-container">
+    <div class="mini-calendar-pane">
+      <h3><?php echo date("F", $base_timestamp); ?></h3>
 
-            <div class="mini-calendar-nav">
-                <button class="mini-nav-arrow">
-                    <a
-                        href="?month=<?php echo $lastMonth ?>&year=<?php echo date('Y', strtotime('-1 month', $base_timestamp)); ?>"><span
-                            class="up">
-                            <img src="./image/arrow_light_left.png" alt="Previous Month" />
-                    </a>
-                </button>
-                <div class="mini-month-title"><?php echo date("Y", $base_timestamp); ?></div>
-                <button class="mini-nav-arrow">
-                    <a
-                        href="?month=<?php echo $nextMonth ?>&year=<?php echo date('Y', strtotime('+1 month', $base_timestamp)); ?>"><span
-                            class="down">
-                            <img src="./image/arrow_light_right.png" alt="Next Month" />
-                    </a>
-                </button>
-            </div>
+      <div class="mini-calendar-nav">
+        <button class="mini-nav-arrow">
+          <a
+            href="?month=<?php echo $lastMonth ?>&year=<?php echo date('Y', strtotime('-1 month', $base_timestamp)); ?>"><span
+              class="up">
+              <img src="./image/arrow_light_left.png" alt="Previous Month" />
+          </a>
+        </button>
+        <div class="mini-month-title"><?php echo date("Y", $base_timestamp); ?></div>
+        <button class="mini-nav-arrow">
+          <a
+            href="?month=<?php echo $nextMonth ?>&year=<?php echo date('Y', strtotime('+1 month', $base_timestamp)); ?>"><span
+              class="down">
+              <img src="./image/arrow_light_right.png" alt="Next Month" />
+          </a>
+        </button>
+      </div>
 
-            <div class="mini-weekdays" style="margin-top: 15px">
-                <div>S</div>
-                <div>M</div>
-                <div>T</div>
-                <div>W</div>
-                <div>T</div>
-                <div>F</div>
-                <div>S</div>
-            </div>
+      <div class="mini-weekdays" style="margin-top: 15px">
+        <div>S</div>
+        <div>M</div>
+        <div>T</div>
+        <div>W</div>
+        <div>T</div>
+        <div>F</div>
+        <div>S</div>
+      </div>
 
-            <div class="mini-days">
-                <?php
+      <div class="mini-days">
+        <?php
                 for ($i = 0; $i < 42; $i++) {
                     $days = strtotime("+$i day", $tableFirstDay);
                     $color = (date('m', $days) !== $month) ? 'color:lightskyblue' : '';
                     echo '<div style=' . $color . '>' . date('d', $days) . '</div>';
                 }
-    ?>
-            </div>
-            <!-- 點擊後，顯示當前時間 -->
-            <a href="?month=<?php echo date('m'); ?>&year=<?php echo date('Y'); ?>" class="door-box-link">
-                <div class="door-box">
-                    <div class="door"></div>
-                </div>
-            </a>
+                ?>
+      </div>
+      <!-- 點擊後，顯示當前時間 -->
+      <a href="?month=<?php echo date('m'); ?>&year=<?php echo date('Y'); ?>" class="door-box-link">
+        <div class="door-box">
+          <div class="door"></div>
         </div>
+      </a>
+    </div>
 
-        <div class="main-calendar-pane">
-            <div class="header">
-                <div class="slogan">WE SCARE BECAUSE WE CARE</div>
+    <div class="main-calendar-pane">
+      <div class="header">
+        <div class="slogan">WE SCARE BECAUSE WE CARE</div>
 
-                <div class="month-nav-container">
-                    <button class="main-nav-arrow" id="prev-month-btn">
-                        <a
-                            href="?month=<?php echo date('m', strtotime('-1 month', $base_timestamp)); ?>&year=<?php echo date('Y', strtotime('-1 month', $base_timestamp)); ?>">
-                            <img src="./image/arrow_light_left.png" alt="Previous Month" />
-                        </a>
-                    </button>
+        <div class="month-nav-container">
+          <button class="main-nav-arrow" id="prev-month-btn">
+            <a
+              href="?month=<?php echo date('m', strtotime('-1 month', $base_timestamp)); ?>&year=<?php echo date('Y', strtotime('-1 month', $base_timestamp)); ?>">
+              <img src="./image/arrow_light_left.png" alt="Previous Month" />
+            </a>
+          </button>
 
-                    <div class="month-title month"><?php echo date("F", $base_timestamp); ?></div>
+          <div class="month-title month"><?php echo date("F", $base_timestamp); ?></div>
 
-                    <div class="month-title year"><?php echo date("Y", $base_timestamp); ?></div>
+          <div class="month-title year"><?php echo date("Y", $base_timestamp); ?></div>
 
-                    <button class="main-nav-arrow" id="next-month-btn">
-                        <a
-                            href="?month=<?php echo date('m', strtotime('+1 month', $base_timestamp)); ?>&year=<?php echo date('Y', strtotime('+1 month', $base_timestamp)); ?>">
-                            <img src="./image/arrow_light_right.png" alt="Next Month" />
-                        </a>
-                    </button>
-                </div>
-            </div>
+          <button class="main-nav-arrow" id="next-month-btn">
+            <a
+              href="?month=<?php echo date('m', strtotime('+1 month', $base_timestamp)); ?>&year=<?php echo date('Y', strtotime('+1 month', $base_timestamp)); ?>">
+              <img src="./image/arrow_light_right.png" alt="Next Month" />
+            </a>
+          </button>
+        </div>
+      </div>
 
-            <div class="weekdays">
-                <div>SUN</div>
-                <div>MON</div>
-                <div>TUE</div>
-                <div>WED</div>
-                <div>THU</div>
-                <div>FRI</div>
-                <div>SAT</div>
-            </div>
+      <div class="weekdays">
+        <div>SUN</div>
+        <div>MON</div>
+        <div>TUE</div>
+        <div>WED</div>
+        <div>THU</div>
+        <div>FRI</div>
+        <div>SAT</div>
+      </div>
 
-            <div class="days">
-                <?php
-        for ($i = 0; $i < 42; $i++) {
-            $days = strtotime("+$i day", $tableFirstDay);
-            $color = (date('m', $days) !== $month) ? 'color:lightgray' : '';
-            $today = (date("Y-m-d", $days) == $targetDay) ? 'today' : '';
-            echo '<div class="day-item ' . $today . '" data-date="' . date('Y-m-d', $days) . '" date-id=".$." style="' . $color . '">
+      <div class="days">
+        <?php
+                for ($i = 0; $i < 42; $i++) {
+                    $days = strtotime("+$i day", $tableFirstDay);
+                    $color = (date('m', $days) !== $month) ? 'color:lightgray' : '';
+                    $today = (date("Y-m-d", $days)) == date("Y-m-d") ? 'today' : '';
+                    echo '<div class="day-item ' . $today . '" data-date="' . date('Y-m-d', $days) . '" date-id=".$." style="' . $color . '">
         ' . date('d', $days) . '
       </div>';
-        }
-    echo "</div>";
-    ?>
-                <script>
-                // 只要 HTML 結構建立好就觸發，不需等待圖片、CSS或其他資料載入完成，速度快
-                document.addEventListener('DOMContentLoaded', () => {
-                    loadTodos()
-                })
-
-                // 監聽所有HTML，有發生 click 的事件
-                document.addEventListener('click', function(event) {
-                    // 點擊到.day-item的格子裡
-                    const clickedCell = event.target.closest('.day-item');
-
-                    // 從點擊到的.day-item的取得 data-date的值
-                    const dateKey = clickedCell ? clickedCell.dataset.date : null;
-                    console.log("datekey :", dateKey)
-
-                    // 如果點擊到.day-item的格子裡，並且 clickedCell 裡的文字不是空白，同時有 data-date的值
-                    if (clickedCell && clickedCell.innerText.trim() !== "" && dateKey) {
-                        // prompt 彈出小視窗，暫停程式，直到使用者輸入完畢或按取消
-                        const todoText = prompt("請輸入怪獸代辦事項：")
-
-                        // 有todoText 同時 todoText 移除字串開頭和結尾的空白字元，不是空白
-                        if (todoText && todoText.trim() !== "") {
-                            addTodoCalendar(dateKey, todoText.trim())
-                        }
-                    }
-                })
-
-                // 新增一筆代辦事項到 todos 陣列
-                function addTodoCalendar(dateKey, todoText) {
-                    const newTodo = {
-                        id: Date.now(),
-                        date: dateKey,
-                        text: todoText,
-                        completed: false,
-                    };
-
-                    todos.push(newTodo)
-
-                    // 所有新增的辦事項，存在 todos 陣列裡
-                    saveTodos()
-
-                    // 將 todos 陣列的資料畫出來  
-                    renderTodos()
                 }
-
-                // 所有新增的代辦事項，存在 todos 陣列裡
-                let todos = [];
-                // 命名叫 saveTodos 的函式，將 todos 陣列存到瀏覽器的 localStorage
-                function saveTodos() {
-                    // 把 todos 陣列轉成 JSON 純文字，因為 localStorage 只能識別純文字
-                    const jsonString = JSON.stringify(todos);
-
-                    // 存入 localStorage，並給 key 命名為 monsterCalendarTodos
-                    localStorage.setItem('monsterCalendarTodos', jsonString);
-                    console.log(jsonString)
-                    console.log('資料存好了!!!')
-                }
-                // 從 localStorage 取出資料， 放到 todos 陣列
-                function loadTodos() {
-                    // 從 localStorage 取出 key 為 'monsterCalendarTodos'的 value
-                    // localStorage.getItem 取出的資料會變成 JSON純文字檔
-                    const saveDate = localStorage.getItem('monsterCalendarTodos')
-                    console.log('saveDate : ', saveDate)
-
-                    if (saveDate) {
-                        // 如果在 localStorage 的 'monsterCalendarTodos'的 value
-                        // ，有值的話，將 saveDate 的 JSON純文字檔，轉回 JS 的陣列或物件 
-                        todos = JSON.parse(saveDate);
-                        console.log('todos : ', todos)
-                        // 現在 todos 變回陣列
-                        console.log('已經存過資料了~')
-                    } else {
-                        // 如果沒有，維持空陣列
-                        todos = []
-                        console.log('localStorage 沒有資料啦~')
-                    }
-                    renderTodos()
-                }
-
-                // 將 todos 陣列的資料畫出來  
-                function renderTodos() {
-                    // 清空所有代辦事項，避免重複，保證和 todos 陣列完全一樣
-                    document.querySelectorAll('.monster-note').forEach(note => {
-                        note.remove()
-                    });
-                    todos.forEach(todo => {
-                        // 找到 data-date 是 ${todo.date} 的日曆格
-                        const targetCell = document.querySelector(`.day-item[data-date="${todo.date}"]`)
-
-                        // 有找到 targetCell，newNote 新增一個<div></div>
-                        if (targetCell) {
-                            const newNote = document.createElement('div');
-
-                            // newNote 新增 <div></div> 裡的文字
-                            newNote.innerHTML = "👾 " + todo.text;
-                            newNote.className = 'monster-note';
-
-                            // 把 newNote 例如<div>👾 驚嚇課程 </div>，放在 clickedCell，appendChild是如果你同一個格子加兩次代辦事項，第二個會排在第一個下面，不會把第一個蓋掉
-                            targetCell.appendChild(newNote)
-                        }
-                    })
-                }
-                </script>
+                "</div>";
+                ?>
+        <!-- 自訂彈出視窗 (新增待辦事項) -->
+        <div id="custom-modal" class="modal-overlay">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title">🎃 Add new task</h2>
+              <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
+            <div class="modal-body">
+              <p class="modal-date"></p>
+              <input type="text" id="todo-input" class="modal-input" placeholder="輸入你的驚嚇任務..." />
+
+              <!-- 🆕 新增：顏色選擇區域 -->
+              <div class="color-picker-section">
+                <label class="color-label">color</label>
+                <div class="color-options">
+                  <button class="color-btn" data-color="mike-green"
+                    style="background: linear-gradient(135deg, #8cd147 0%, #4caf50 100%);" title="麥克綠"></button>
+
+                  <button class="color-btn" data-color="sulley-blue"
+                    style="background: linear-gradient(135deg, #6bc4e8 0%, #4a90e2 100%);" title="毛怪藍"></button>
+
+                  <button class="color-btn" data-color="sulley-purple"
+                    style="background: linear-gradient(135deg, #9b7be0 0%, #7e57c2 100%);" title="毛怪紫"></button>
+
+                  <button class="color-btn" data-color="mu-orange"
+                    style="background: linear-gradient(135deg, #ff9d42 0%, #ff7043 100%);" title="怪獸大學橘"></button>
+
+                  <button class="color-btn" data-color="mu-yellow"
+                    style="background: linear-gradient(135deg, #ffe24b 0%, #ffc107 100%);" title="怪獸大學黃"></button>
+
+                  <button class="color-btn" data-color="mu-pink"
+                    style="background: linear-gradient(135deg, #ff80ab 0%, #ff4081 100%);" title="怪獸大學粉"></button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-btn cancel-btn" onclick="closeModal()">取消</button>
+              <button class="modal-btn confirm-btn" onclick="confirmTodo()">確認</button>
+            </div>
+          </div>
         </div>
+
+        <!-- 🆕 新增：詳細視窗 (雙擊日期後顯示) -->
+        <div id="detail-modal" class="modal-overlay">
+          <div class="modal-content detail-modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="detail-modal-title">📅 Todo list</h2>
+              <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p class="modal-date" id="detail-modal-date"></p>
+
+              <!-- 待辦事項列表容器 -->
+              <div id="detail-todo-list" class="detail-todo-list">
+                <!-- 這裡會動態插入待辦事項 -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-btn confirm-btn" onclick="openAddFromDetail()">
+                ➕ 新增
+              </button>
+            </div>
+          </div>
+        </div>
+        <script>
+        // ==================== 全域變數區 ====================
+        // 所有待辦事項都存在這個陣列
+        let todos = [];
+
+        // localStorage 的名字
+        const STORAGE_KEY = 'monsterCalendarTodos_v22';
+
+        // 目前選中的日期（格式：2025-11-30）
+        let currentDateKey = '';
+
+        // 目前選中的顏色（預設綠色）
+        let selectedColor = 'linear-gradient(135deg, #8cd147 0%, #4caf50 100%)'; // 預設麥克綠
+
+        // 判斷是不是從「詳細視窗」點「新增」進來的
+        let fromDetailModal = false;
+
+        // 單擊 / 雙擊用
+        let clickTimer = null;
+        let clickCount = 0;
+
+        // 正在編輯中的任務 ID（詳細視窗用）
+        let editingTodoId = null;
+
+        // 正在拖曳中的任務（用來在詳細視窗內排序）
+        let draggedTodoIndex = null;
+
+        // ==================== 頁面載入完成就執行 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+          loadTodos(); // 1. 讀取舊資料
+          renderTodos(); // 2. 把舊資料畫到日曆上
+          attachCalendarCellListeners(); // 3. 幫每一天的格子加上點擊（單擊/雙擊）
+          attachColorButtonListeners(); // 4. 顏色按鈕可以點
+        });
+
+        // ==================== 儲存 & 讀取資料 ====================
+        function saveTodos() {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        }
+
+        function loadTodos() {
+          const data = localStorage.getItem(STORAGE_KEY);
+          if (data) {
+            todos = JSON.parse(data);
+          }
+        }
+
+        // ==================== 畫出所有待辦到日曆格子 ====================
+        function renderTodos() {
+          // 先把舊的全部清掉
+          document.querySelectorAll('.monster-note').forEach(el => el.remove());
+
+          todos.forEach(todo => {
+            const cell = document.querySelector(`.day-item[data-date="${todo.date}"]`);
+            if (!cell) return;
+
+            const note = document.createElement('div');
+            note.className = 'monster-note';
+            note.style.setProperty('--note-color', todo.color);
+            note.dataset.id = todo.id;
+            note.draggable = true; // 可以拖曳
+
+            note.innerHTML = `
+      <span class="drag-icon">👾&nbsp</span>
+      <span class="todo-text">${todo.text}</span>
+    `;
+
+            // 加上拖曳事件（跨日期移動）
+            note.addEventListener('dragstart', e => {
+              e.dataTransfer.setData('text/plain', todo.id);
+              note.classList.add('opacity-50');
+            });
+
+            note.addEventListener('dragend', () => {
+              note.classList.remove('opacity-50');
+            });
+
+            cell.appendChild(note);
+          });
+
+          // 重新綁定格子的 drop 事件（因為格子是固定的）
+          attachDropListeners();
+        }
+
+        // 讓格子可以被放下（跨日期拖曳）
+        function attachDropListeners() {
+          document.querySelectorAll('.day-item').forEach(cell => {
+            cell.addEventListener('dragover', e => e.preventDefault());
+            cell.addEventListener('drop', e => {
+              e.preventDefault();
+              const todoId = parseInt(e.dataTransfer.getData('text/plain'));
+              const targetDate = cell.dataset.date;
+
+              if (!targetDate) return;
+
+              // 把這筆任務的日期改成新日期
+              todos = todos.map(todo => {
+                if (todo.id === todoId) {
+                  return {
+                    ...todo,
+                    date: targetDate
+                  };
+                }
+                return todo;
+              });
+
+              saveTodos();
+              renderTodos();
+              // 如果詳細視窗開著，也要立刻更新
+              if (document.getElementById('detail-modal').style.display === 'flex') {
+                renderDetailModal(currentDateKey);
+              }
+            });
+          });
+        }
+
+        // ==================== 單擊 / 雙擊日期格子 ====================
+        function attachCalendarCellListeners() {
+          document.querySelectorAll('.day-item').forEach(cell => {
+            cell.addEventListener('click', function(e) {
+              // 如果點到的是待辦事項，就不要開視窗（讓它可以拖）
+              if (e.target.closest('.monster-note')) return;
+
+              const dateKey = this.dataset.date;
+              if (!dateKey) return;
+
+              clickCount++;
+
+              if (clickCount === 1) {
+                // 第一次點擊 → 等一下看有沒有第二下
+                clickTimer = setTimeout(() => {
+                  openModal(dateKey); // 單擊 → 開新增視窗
+                  clickCount = 0;
+                }, 300);
+              } else {
+                // 第二次點擊 → 雙擊
+                clearTimeout(clickTimer);
+                openDetailModal(dateKey); // 雙擊 → 開詳細視窗
+                clickCount = 0;
+              }
+            });
+          });
+        }
+
+        // ==================== 顏色選擇器 ====================
+        function attachColorButtonListeners() {
+          document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              // 直接抓這個按鈕目前的背景（包含 linear-gradient）
+              selectedColor = window.getComputedStyle(this).backgroundImage;
+
+              // 選中樣式
+              document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+              this.classList.add('selected');
+            });
+          });
+
+          // 預設選第一個（怪獸大學綠）
+          document.querySelector('.color-btn')?.classList.add('selected');
+          selectedColor = window.getComputedStyle(document.querySelector('.color-btn')).backgroundImage;
+        }
+
+        // ==================== 新增視窗相關 ====================
+        function openModal(dateKey) {
+          currentDateKey = dateKey;
+          fromDetailModal = false;
+
+          const modal = document.getElementById('custom-modal');
+          modal.querySelector('.modal-date').textContent = ` ${dateKey}`;
+          modal.style.display = 'flex';
+          document.getElementById('todo-input').value = '';
+          document.getElementById('todo-input').focus();
+        }
+
+        function closeModal() {
+          document.getElementById('custom-modal').style.display = 'none';
+        }
+
+        function confirmTodo() {
+          const text = document.getElementById('todo-input').value.trim();
+          if (!text || !currentDateKey) return;
+
+          const newTodo = {
+            id: Date.now(),
+            date: currentDateKey,
+            text: text,
+            color: selectedColor
+          };
+
+          todos.push(newTodo);
+          saveTodos();
+          renderTodos();
+
+          closeModal();
+
+          // 如果是從「詳細視窗」點進來的，要馬上回到詳細視窗
+          if (fromDetailModal) {
+            setTimeout(() => openDetailModal(currentDateKey), 100);
+            fromDetailModal = false;
+          }
+        }
+
+        // ==================== 詳細視窗相關（最強功能都在這）===================
+        function openDetailModal(dateKey) {
+          currentDateKey = dateKey;
+          document.getElementById('detail-modal').style.display = 'flex';
+          document.getElementById('detail-modal-date').textContent = `${dateKey}`;
+          renderDetailModal(dateKey);
+        }
+
+        function closeDetailModal() {
+          document.getElementById('detail-modal').style.display = 'none';
+          editingTodoId = null;
+          draggedTodoIndex = null;
+        }
+
+        // 從詳細視窗點「新增」按鈕
+        function openAddFromDetail() {
+          fromDetailModal = true;
+          closeDetailModal();
+          openModal(currentDateKey);
+        }
+
+        // 畫出詳細視窗裡的所有任務
+        function renderDetailModal(dateKey) {
+          const dayTodos = todos.filter(t => t.date === dateKey);
+          const container = document.getElementById('detail-todo-list');
+
+          if (dayTodos.length === 0) {
+            container.innerHTML = '<div class="empty-state">這天沒有待辦事項喔～</div>';
+            return;
+          }
+
+          container.innerHTML = '';
+
+          dayTodos.forEach((todo, index) => {
+            const isEditing = editingTodoId === todo.id;
+
+            const item = document.createElement('div');
+            item.className = 'detail-todo-item';
+            item.dataset.id = todo.id;
+            item.draggable = !isEditing;
+
+            // 關鍵：直接用 CSS 變數存漸層
+            item.style.setProperty('--note-color', todo.color);
+
+            item.innerHTML = `
+              <span class="todo-number">${index + 1}.</span>
+              ${isEditing 
+                ? `<input type="text" class="todo-edit-input" value="${todo.text}" data-id="${todo.id}" autofocus />`
+                : `<span class="todo-text-editable" data-id="${todo.id}">${todo.text}</span>`
+              }
+              ${!isEditing ? `<button class="detail-delete-btn" data-id="${todo.id}">X</button>` : ''}
+            `;
+
+            // 拖曳排序（詳細視窗內）
+            item.addEventListener('dragstart', e => {
+              draggedTodoIndex = index;
+              item.classList.add('opacity-50');
+            });
+
+            item.addEventListener('dragover', e => e.preventDefault());
+
+            item.addEventListener('drop', e => {
+              e.preventDefault();
+              if (draggedTodoIndex === null || draggedTodoIndex === index) return;
+
+              const [moved] = dayTodos.splice(draggedTodoIndex, 1);
+              dayTodos.splice(index, 0, moved);
+
+              const otherTodos = todos.filter(t => t.date !== dateKey);
+              todos = [...otherTodos, ...dayTodos];
+
+              saveTodos();
+              renderDetailModal(dateKey);
+              renderTodos();
+            });
+
+            item.addEventListener('dragend', () => {
+              item.classList.remove('opacity-50');
+              draggedTodoIndex = null;
+            });
+
+            container.appendChild(item);
+          });
+
+          attachDetailEvents();
+        }
+
+        function attachDetailEvents() {
+          // 點文字 → 進入編輯
+          document.querySelectorAll('.todo-text-editable').forEach(span => {
+            span.addEventListener('click', function() {
+              editingTodoId = parseInt(this.dataset.id);
+              renderDetailModal(currentDateKey);
+              setTimeout(() => {
+                const input = document.querySelector(`.todo-edit-input[data-id="${editingTodoId}"]`);
+                if (input) input.focus(), input.select();
+              }, 50);
+            });
+          });
+
+          // 編輯框失去焦點或按 Enter → 儲存
+          document.querySelectorAll('.todo-edit-input').forEach(input => {
+            const save = () => {
+              const newText = input.value.trim();
+              if (newText) {
+                todos = todos.map(t => t.id === parseInt(input.dataset.id) ? {
+                  ...t,
+                  text: newText
+                } : t);
+                saveTodos();
+                renderTodos();
+              }
+              editingTodoId = null;
+              renderDetailModal(currentDateKey);
+            };
+
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', e => {
+              if (e.key === 'Enter') save();
+              if (e.key === 'Escape') {
+                editingTodoId = null;
+                renderDetailModal(currentDateKey);
+              }
+            });
+          });
+
+          // 刪除按鈕
+          document.querySelectorAll('.detail-delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const id = parseInt(this.dataset.id);
+              todos = todos.filter(t => t.id !== id);
+              saveTodos();
+              renderTodos();
+              renderDetailModal(currentDateKey);
+            });
+          });
+        }
+
+        // ==================== 鍵盤快捷鍵 ===================
+        document.addEventListener('keydown', e => {
+          const addModal = document.getElementById('custom-modal').style.display === 'flex';
+          const detailModal = document.getElementById('detail-modal').style.display === 'flex';
+
+          if (addModal && e.key === 'Enter') confirmTodo();
+          if (addModal && e.key === 'Escape') {
+            closeModal();
+            if (fromDetailModal) {
+              openDetailModal(currentDateKey);
+              fromDetailModal = false;
+            }
+          }
+          if (detailModal && e.key === 'Escape') closeDetailModal();
+        });
+        </script>
+      </div>
     </div>
+  </div>
 </body>
 
 </html>

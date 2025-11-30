@@ -1,421 +1,669 @@
- /* CSS 變數定義怪獸風格主色調 */
-    :root {
-        --sulley-blue: #33a2e5;
-        /* 毛怪藍 */
-        --mike-green: #90d344;
-        /* 麥克綠 */
-        --purple-patch: #855e97;
-        /* 紫色斑點/裝飾 */
-        --eye-white: #ffffff;
-        /* 眼睛白 */
-        --deep-shadow: #1e6091;
-        /* 深藍陰影 (主要陰影色) */
-        --light-border: rgba(0, 0, 0, 0.1);
-        /* 輕微邊界色 */
-    }
+/* ================ 怪獸風格主色調 ================ */
+:root {
+    --sulley-blue: #33a2e5;
+    --mike-green: #90d344;
+    --purple-patch: #855e97;
+    --eye-white: #ffffff;
+    --deep-shadow: #1e6091;
+    --light-border: rgba(0, 0, 0, 0.1);
+}
 
-    body {
-        font-family: "Varela Round", sans-serif;
-        background: linear-gradient(135deg,
-                var(--sulley-blue) 0%,
-                var(--purple-patch) 100%);
-        color: var(--deep-shadow);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-    }
+body {
+    font-family: "Varela Round", sans-serif;
+    background: linear-gradient(135deg, var(--sulley-blue) 0%, var(--purple-patch) 100%);
+    color: var(--deep-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
 
-    .two-pane-container {
-        display: flex;
-        width: 1200px;
-        max-width: 95%;
-        background-color: var(--eye-white);
-        border-radius: 40px;
-        border: 8px solid var(--mike-green);
-        box-shadow: 0 15px 30px var(--deep-shadow),
-            0 0 0 15px var(--sulley-blue);
-        overflow: hidden;
-    }
+.two-pane-container {
+    display: flex;
+    width: 1200px;
+    max-width: 95%;
+    background-color: var(--eye-white);
+    border-radius: 40px;
+    border: 8px solid var(--mike-green);
+    box-shadow: 0 15px 30px var(--deep-shadow), 0 0 0 15px var(--sulley-blue);
+    overflow: hidden;
+}
 
-    /* --- 左側小月曆樣式 --- */
-    .mini-calendar-pane {
-        width: 280px;
-        padding: 30px 20px;
-        background-color: var(--sulley-blue);
-        color: var(--eye-white);
-        border-right: 5px solid var(--mike-green);
-        flex-shrink: 0;
-        position: relative;
-        /* 用於定位 TODAY 按鈕 */
-    }
+/* ================ 左側小月曆 ================ */
+.mini-calendar-pane {
+    width: 280px;
+    padding: 30px 20px;
+    background-color: var(--sulley-blue);
+    color: var(--eye-white);
+    border-right: 5px solid var(--mike-green);
+    flex-shrink: 0;
+    position: relative;
+}
 
-    .mini-calendar-pane h3 {
-        font-family: "Bungee", cursive;
-        font-size: 1.5rem;
-        margin-top: 0;
-        margin-bottom: 20px;
-        text-align: center;
-        color: var(--eye-white);
-        text-shadow: 1px 1px 0 var(--deep-shadow);
-    }
+.mini-calendar-pane h3 {
+    font-family: "Bungee", cursive;
+    font-size: 1.5rem;
+    margin: 0 0 20px;
+    text-align: center;
+    color: var(--eye-white);
+    text-shadow: 1px 1px 0 var(--deep-shadow);
+}
 
-    .mini-calendar-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+.mini-calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
-    /* 小月曆導航圖片按鈕 */
-    .mini-nav-arrow {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        filter: drop-shadow(2px 2px 0 var(--deep-shadow));
-    }
+.mini-nav-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    filter: drop-shadow(2px 2px 0 var(--deep-shadow));
+}
 
-    .mini-nav-arrow img {
-        width: 30px;
-        /* 圖片大小 */
-        height: auto;
-    }
+.mini-nav-arrow img {
+    width: 30px;
+    height: auto;
+}
 
-    .mini-month-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--eye-white);
-    }
+.mini-month-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--eye-white);
+}
 
-    .mini-weekdays,
-    .mini-days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 3px;
-        text-align: center;
-    }
+.mini-weekdays,
+.mini-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    text-align: center;
+}
 
-    .mini-weekdays {
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-bottom: 5px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-        color: var(--eye-white);
-        /* 星期文字白色 */
-    }
+.mini-weekdays {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--eye-white);
+}
 
-    .mini-day-item {
-        padding: 5px;
-        font-size: 0.9rem;
-        border-radius: 5px;
-        transition: background-color 0.1s;
-        color: var(--eye-white);
-        /* 日期數字白色 */
-    }
+.mini-day-item {
+    padding: 5px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    color: var(--eye-white);
+    transition: background-color 0.1s;
+}
 
-    .mini-day-item:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
+.mini-day-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
 
-    .mini-day-item.today {
-        background-color: var(--mike-green);
-        color: var(--deep-shadow);
-        font-weight: 700;
-    }
+.mini-day-item.today {
+    background-color: var(--mike-green);
+    color: var(--deep-shadow);
+    font-weight: 700;
+}
 
-    /* TODAY 按鈕 (開門動畫 + 閃爍陰影) */
-    .door-box {
-        width: 282px;
-        height: 282px;
-        margin: 100px auto;
-        position: relative;
-        /* 移除 overflow: hidden; 讓陰影可以自由向外擴散，不被裁切。 */
-        /* overflow: hidden; */
-        background: transparent;
-        cursor: pointer;
-    }
+/* ================ 怪獸之門（回到今天按鈕）=============== */
+.door-box-link {
+    display: block;
+    width: 282px;
+    height: 282px;
+    margin: 80px auto 0;
+    /* 讓它在小月曆下方置中 */
+    cursor: pointer;
+}
 
-    /* 門本體 */
-    .door {
-        width: 282px;
-        height: 282px;
-        background: url("./image/door.png") no-repeat;
-        background-size: 3948px 282px;
-        /* 14格總寬度 */
-        image-rendering: pixelated;
+.door-box {
+    width: 282px;
+    height: 282px;
+    position: relative;
+    background: transparent;
+}
+
+.door {
+    width: 100%;
+    height: 100%;
+    background: url("./image/door.png") no-repeat;
+    background-size: 3948px 282px;
+    /* 14 格總寬度 */
+    image-rendering: pixelated;
+    background-position: 0 0;
+    animation: shadowFlicker 1.4s infinite alternate;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 40px rgba(0, 255, 255, 0.6));
+}
+
+/* hover 時開門 + 停止閃爍 */
+.door-box:hover .door {
+    animation: openDoor 0.56s steps(13) forwards, shadowFlicker 0s paused;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+}
+
+/* 離開時關門 + 恢復閃爍 */
+.door-box:not(:hover) .door {
+    animation: closeDoor 0.56s steps(13) forwards,
+        shadowFlicker 1.4s infinite alternate 0.56s;
+}
+
+/* 關鍵影格 */
+@keyframes openDoor {
+    from {
         background-position: 0 0;
-        transition: none !important;
-
-        /* ==== 這裡是重點：閃爍陰影 ==== */
-        /* 預設一直閃（非 hover 時） */
-        animation: shadowFlicker 1.4s infinite alternate;
-
-        /* 發光+陰影效果（可調整顏色跟強度） */
-        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 40px rgba(0, 255, 255, 0.6));
     }
 
-    /* ==== 滑鼠移入時：停止閃爍 + 移除陰影（乾淨開門）==== */
-    .door-box:hover .door {
-        animation: openDoor 0.56s steps(13) forwards, shadowFlicker 0s paused;
-        /* 強制暫停閃爍 */
-        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
-        /* 開門時只留淡淡陰影 */
+    to {
+        background-position: -3666px 0;
+    }
+}
+
+@keyframes closeDoor {
+    from {
+        background-position: -3666px 0;
     }
 
-    /* 滑鼠離開後恢復閃爍 + 倒播 */
-    .door-box:not(:hover) .door {
-        animation: closeDoor 0.56s steps(13) forwards,
-            shadowFlicker 1.4s infinite alternate 0.56s;
-        /* 倒播完 0.56s 後再開始閃 */
+    to {
+        background-position: 0 0;
+    }
+}
+
+@keyframes shadowFlicker {
+    0% {
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 20px rgba(0, 204, 255, 0));
     }
 
-    /* 正播 0→13 */
-    @keyframes openDoor {
-        from {
-            background-position: 0px 0;
-        }
-
-        to {
-            background-position: -3666px 0;
-        }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 50px rgba(0, 255, 255, 0.8));
     }
 
-    /* 倒播 13→0 */
-    @keyframes closeDoor {
-        from {
-            background-position: -3666px 0;
-        }
+    100% {
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 35px rgba(0, 255, 204, 0.4));
+    }
+}
 
-        to {
-            background-position: 0px 0;
-        }
+/* ================ 右側大月曆 ================ */
+.main-calendar-pane {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+.slogan {
+    text-align: center;
+    font-family: "Bungee", cursive;
+    font-size: 1.8rem;
+    color: var(--purple-patch);
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 0 var(--mike-green);
+}
+
+.month-nav-container {
+    display: grid;
+    grid-template-columns: 80px 1fr 180px 163px 1fr 68px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#prev-month-btn {
+    grid-column: 1;
+    justify-self: start;
+}
+
+#next-month-btn {
+    grid-column: 6;
+    justify-self: end;
+}
+
+.main-nav-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav-arrow img {
+    height: 60px;
+    width: auto;
+    filter: drop-shadow(2px 2px 0 var(--deep-shadow));
+}
+
+.month-title {
+    font-family: "Bungee", cursive;
+    letter-spacing: 5px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.month-title.month {
+    font-size: 4rem;
+    color: var(--mike-green);
+    text-shadow: 3px 3px 0 var(--deep-shadow);
+    grid-column: 3;
+    justify-self: center;
+}
+
+.month-title.year {
+    font-size: 4rem;
+    color: var(--purple-patch);
+    text-shadow: 3px 3px 0 var(--deep-shadow);
+    grid-column: 5;
+    justify-self: center;
+}
+
+.weekdays,
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: left;
+}
+
+.weekdays {
+    border-bottom: 3px dashed var(--purple-patch);
+    padding-bottom: 5px;
+}
+
+.weekday-item {
+    font-family: "Bungee", cursive;
+    color: var(--purple-patch);
+    padding: 10px 10px 10px 5px;
+    font-size: 1rem;
+    border-right: 1px dotted var(--light-border);
+}
+
+.weekday-item:last-child {
+    border-right: none;
+}
+
+.day-item {
+    height: 120px;
+    border: 1px solid var(--light-border);
+    border-top: none;
+    border-left: none;
+    padding: 5px;
+    background-color: var(--eye-white);
+    cursor: pointer;
+    transition: background-color 0.1s;
+    overflow: hidden;
+}
+
+.day-item:nth-child(7n) {
+    border-right: none;
+}
+
+.day-item:hover {
+    background-color: #f5f5f5;
+}
+
+.day-number {
+    font-family: "Varela Round", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--deep-shadow);
+    margin-bottom: 5px;
+}
+
+.today .day-number {
+    color: var(--eye-white);
+    background-color: var(--purple-patch);
+    padding: 2px 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--mike-green);
+}
+
+.day-item.today {
+    box-shadow: 0 0 10px var(--mike-green) inset, 0 0 10px var(--mike-green);
+}
+
+.day-item.prev-month .day-number,
+.day-item.next-month .day-number {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+/* ================ 待辦事項（格子內） ================ */
+.monster-note {
+    --note-color: linear-gradient(135deg, #8cd147 0%, #4caf50 100%);
+    /* 預設顏色 */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    /* 比原本再大一點，文字更好看 */
+    margin-top: 6px;
+    background-image: var(--note-color) !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    /* 稍微再圓潤一點，像怪獸大學校徽 */
+    font-size: 12.5px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    cursor: move;
+/* 拖曳時顯示更好 */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover 特效：往上飄 + 更強陰影 */
+.monster-note:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* 拖曳時半透明 */
+.monster-note.opacity-50 {
+    opacity: 0.5;
+}
+
+.monster-note:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.monster-note .todo-text {
+    flex-grow: 1;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ================ 彈出視窗（新增） ================ */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--eye-white) 0%, #f0f8ff 100%);
+    border-radius: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 8px var(--mike-green), 0 0 0 12px var(--sulley-blue);
+    animation: modalSlideIn 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
     }
 
-    /* 閃爍陰影動畫 */
-    @keyframes shadowFlicker {
-        0% {
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 20px rgba(0, 204, 255, 0));
-        }
-
-        50% {
-            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 50px rgba(0, 255, 255, 0.8));
-        }
-
-        100% {
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 35px rgba(0, 255, 204, 0.4));
-        }
+    to {
+        opacity: 1;
     }
+}
 
-    /* 新增：主月曆導航圖片按鈕的圖片尺寸 */
-    .main-nav-arrow img {
-        height: 60px;
-        /* 固定圖片高度，避免過大 */
-        width: auto;
-        filter: drop-shadow(2px 2px 0 var(--deep-shadow));
-    }
+.modal-header {
+    background: linear-gradient(135deg, var(--sulley-blue) 0%, var(--purple-patch) 100%);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 5px solid var(--mike-green);
+}
 
-    /* 由於您沒有提供 .main-nav-arrow 的基礎樣式，為確保圖片在按鈕內置中，我們補上： */
-    .main-nav-arrow {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        /* 圖片垂直置中 */
-    }
+.modal-title {
+    font-family: "Bungee", cursive;
+    color: white;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
 
-    /* --- 右側大月曆樣式 --- */
-    .main-calendar-pane {
-        flex-grow: 1;
-        padding: 30px;
-    }
+.modal-close {
+    background: var(--mike-green);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border: 3px solid white;
+    border-radius: 50%;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        margin-bottom: 20px;
-    }
+.modal-close:hover {
+    background: var(--purple-patch);
+    transform: rotate(90deg) scale(1.1);
+}
 
-    /* 標語樣式 */
-    .slogan {
-        font-family: "Bungee", cursive;
-        font-size: 1.8rem;
-        color: var(--purple-patch);
-        letter-spacing: 5px;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 0 var(--mike-green);
-    }
+.modal-body {
+    padding: 30px;
+}
 
-    /* --- 右側大月曆樣式 --- */
+.modal-date {
+    font-family: "Bungee", cursive;
+    color: var(--purple-patch);
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-    /* 1. 使用 Grid 鎖定位置 */
-    .month-nav-container {
-        display: grid;
-        /* 定義 6 欄，確保箭頭、月份和年份的位置都是固定的
-       (1)左箭頭 (2)邊距 (3)月份 (4)年份 (5)邊距 (6)右箭頭 */
-        grid-template-columns: 80px 1fr 180px 163px 1fr 68px;
-        align-items: center;
-        width: 100%;
-        margin-bottom: 20px;
-    }
+.modal-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 3px solid var(--sulley-blue);
+    border-radius: 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: white;
+}
 
-    /* 2. 確保箭頭固定在 Grid 第 1 和 第 6 欄 */
-    #prev-month-btn {
-        grid-column: 1;
-        /* 讓箭頭靠左 */
-        justify-self: start;
-    }
+.modal-input:focus {
+    outline: none;
+    border-color: var(--mike-green);
+    box-shadow: 0 0 0 3px rgba(144, 211, 68, 0.3);
+}
 
-    #next-month-btn {
-        grid-column: 6;
-        /* 讓箭頭靠右 */
-        justify-self: end;
-    }
+.color-picker-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed var(--purple-patch);
+}
 
-    /* 3. 月份和年份的基礎樣式 */
-    .month-title {
-        font-family: "Bungee", cursive;
-        letter-spacing: 5px;
-        margin: 0;
-        white-space: nowrap;
-    }
+.color-label {
+    font-family: "Bungee", cursive;
+    color: var(--purple-patch);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
 
-    /* 4. 鎖定 月份 的位置 */
-    .month-title.month {
-        font-size: 4rem;
-        color: var(--mike-green);
-        text-shadow: 3px 3px 0 var(--deep-shadow);
-        /* 固定在 Grid 第 3 欄 */
-        grid-column: 3;
-        /* 讓月份文字在第 3 欄內置中 */
-        justify-self: center;
-    }
+.color-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
-    /* 5. 鎖定 年份 的位置 */
-    .month-title.year {
-        font-size: 4rem;
-        color: var(--purple-patch);
-        text-shadow: 3px 3px 0 var(--deep-shadow);
-        /* 固定在 Grid 第 4 欄 */
-        grid-column: 5;
-        /* 讓年份文字在第 4 欄內置中 */
-        justify-self: center;
-    }
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border: 3px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
 
-    /* 由於箭頭、月份和年份都被明確定義了 Grid 欄位 (1, 3, 4, 6)，
-   且欄位寬度 (80px, 1fr, 180px, 120px, 1fr, 80px) 也被鎖定，
-   所以它們的位置將是固定且獨立的。 */
+.color-btn:hover {
+    transform: scale(1.15);
+}
 
-    /* 日期網格 */
-    .weekdays,
-    .days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        text-align: left;
-    }
+.color-btn.selected {
+    border: 4px solid var(--deep-shadow);
+    transform: scale(1.2);
+    box-shadow: 0 0 0 3px white, 0 6px 12px rgba(0, 0, 0, 0.4);
+}
 
-    .weekdays {
-        border-bottom: 3px dashed var(--purple-patch);
-        margin-bottom: 0;
-        padding-bottom: 5px;
-        /* 圖片中有間距 */
-    }
+.modal-footer {
+    padding: 20px 30px 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
 
-    .weekday-item {
-        font-family: "Bungee", cursive;
-        color: var(--purple-patch);
-        padding: 10px 10px 10px 5px;
-        font-size: 1rem;
-        font-weight: 400;
-        border-right: 1px dotted var(--light-border);
-        /* 點狀分隔線 */
-    }
+.modal-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
 
-    .weekday-item:last-child {
-        border-right: none;
-    }
+.cancel-btn {
+    background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+    color: #555;
+}
 
-    /* --- 日期數字樣式：格子與邊界處理 --- */
-    .day-item {
-        height: 120px;
-        border: 1px solid var(--light-border);
-        border-top: none;
-        /* 讓格子線條更簡潔 */
-        border-left: none;
-        padding: 5px;
-        overflow: hidden;
-        cursor: pointer;
-        background-color: var(--eye-white);
-        transition: background-color 0.1s;
-    }
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%);
+    transform: translateY(-2px);
+}
 
-    .monster-note {
-        font-size: 12px;
-        background-color: var(--mike-green);
-        color: var(--purple-patch);
-        padding: 2px 5px;
-        margin-top: 5px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+.confirm-btn {
+    background: linear-gradient(135deg, var(--mike-green) 0%, #7bc74d 100%);
+    color: white;
+}
 
-    .day-item:nth-child(7n) {
-        border-right: none;
-    }
+.confirm-btn:hover {
+    background: linear-gradient(135deg, #7bc74d 0%, #5fa836 100%);
+    transform: translateY(-2px);
+}
 
-    .day-item:hover {
-        background-color: #f5f5f5;
-    }
+/* ================ 詳細視窗 ================ */
+.detail-modal-content {
+    max-width: 600px;
+    max-height: 80vh;
+}
 
-    .day-number {
-        font-family: "Varela Round", sans-serif;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--deep-shadow);
-        margin-bottom: 5px;
-    }
+.detail-todo-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
 
-    .today .day-number {
-        color: var(--eye-white);
-        background-color: var(--purple-patch);
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 50%;
-        box-shadow: 0 0 5px var(--mike-green);
-    }
+.detail-todo-item {
+    --note-color: linear-gradient(135deg, #8cd147 0%, #4caf50 100%);
+    background-image: var(--note-color);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
 
-    /* 圖片中今天的日期有綠色光暈 */
-    .day-item.today {
-        box-shadow: 0 0 10px var(--mike-green) inset, 0 0 10px var(--mike-green);
-    }
+.detail-todo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
 
-    /* 前一個月和下一個月的日期 */
-    .day-item.prev-month .day-number,
-    .day-item.next-month .day-number {
-        color: rgba(0, 0, 0, 0.3);
-        /* 灰色，減淡 */
-    }
+.detail-todo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
 
-    /* 代辦事項/活動的風格 */
-    .event {
-        background-color: var(--mike-green);
-        color: var(--eye-white);
-        padding: 3px 5px;
-        margin-top: 5px;
-        /* 與日期數字有間隔 */
-        border-radius: 10px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        cursor: grab;
-        box-shadow: 0 2px 0 var(--deep-shadow);
-    }
+.drag-handle {
+    cursor: grab;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    padding: 5px;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.todo-number {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    min-width: 25px;
+}
+
+.todo-text-editable {
+    flex-grow: 1;
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    cursor: text;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.todo-text-editable:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.todo-edit-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 2px solid white;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.todo-edit-input:focus {
+    outline: none;
+    border-color: var(--sulley-blue);
+    box-shadow: 0 0 0 3px rgba(51, 162, 229, 0.3);
+}
+
+.detail-delete-btn {
+    background: linear-gradient(135deg, #ff5e5e 0%, #e53935 100%);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.detail-todo-item:hover .detail-delete-btn {
+    opacity: 1;
+}
+
+.detail-delete-btn:hover {
+    background: linear-gradient(135deg, #ff3838 0%, #c62828 100%);
+    transform: rotate(90deg) scale(1.1);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--purple-patch);
+    font-size: 1.1rem;
+}
