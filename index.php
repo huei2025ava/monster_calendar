@@ -7,33 +7,37 @@
   <title>怪獸電力公司萬年曆</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Varela+Round&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css">
+  <!-- 終極專業版：用「檔案最後修改時間」當版本號 -->
+  <!-- 優點：CSS 沒改就不重新下載、改了就全員立刻更新、永遠打敗快取、又省流量 -->
+  <!-- 真正上線網站在用的寫法-->
+  <link rel="stylesheet" href="style.css?t=<?php echo filemtime('style.css'); ?>">
+
 </head>
 
 <body>
   <?php
-    date_default_timezone_set('Asia/Taipei');
-    $current_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-    $current_month = isset($_GET['month']) ? $_GET['month'] : date('m');
-    $current_date_string = $current_year . "-" . $current_month . "-01";
-    $base_timestamp = strtotime($current_date_string);
-    $lastMonth = date('m', strtotime('-1 month', $base_timestamp));
-    $nextMonth = date('m', strtotime('+1 month', $base_timestamp));
+  date_default_timezone_set('Asia/Taipei');
+  $current_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+  $current_month = isset($_GET['month']) ? $_GET['month'] : date('m');
+  $current_date_string = $current_year . "-" . $current_month . "-01";
+  $base_timestamp = strtotime($current_date_string);
+  $lastMonth = date('m', strtotime('-1 month', $base_timestamp));
+  $nextMonth = date('m', strtotime('+1 month', $base_timestamp));
 
-    $today = strtotime("now"); // 1970/01/01 00:00:00 UTC 累積到現在時間的秒數
-    $targetDay = date("Y-m-d"); // 今天日期字串，例如今天是2025/11/19
-    $Ttime = strtotime($targetDay); // 1970/01/01 00:00:00 UTC 到今天 00:00:00 之間的總秒數
-    $month = date("m", $base_timestamp); // 11月
-    $Tmonth = date("M");
-    $year = date("Y", $base_timestamp);
+  $today = strtotime("now"); // 1970/01/01 00:00:00 UTC 累積到現在時間的秒數
+  $targetDay = date("Y-m-d"); // 今天日期字串，例如今天是2025/11/19
+  $Ttime = strtotime($targetDay); // 1970/01/01 00:00:00 UTC 到今天 00:00:00 之間的總秒數
+  $month = date("m", $base_timestamp); // 11月
+  $Tmonth = date("M");
+  $year = date("Y", $base_timestamp);
 
-    $firstDayMonth = date("Y-m-1", $base_timestamp); // 2025-11-1
-    $firstWeek = date("w", strtotime($firstDayMonth)); // 0 ~ 6，0是星期日，2025-11-1 輸出6，2025-11-1是星期六
-    $monthDays = date("t", $base_timestamp); //11月有30天
-    $monthWeeks = ceil(($monthDays + $firstWeek) / 7); //30天 + 6 = 36，36/7=5.14，ceil取6，畫6周
-    $tableFirstDay = strtotime("-$firstWeek days", strtotime($firstDayMonth));
-    //2025-11-1減6天，第一格是2025-10-26的秒數
-    ?>
+  $firstDayMonth = date("Y-m-1", $base_timestamp); // 2025-11-1
+  $firstWeek = date("w", strtotime($firstDayMonth)); // 0 ~ 6，0是星期日，2025-11-1 輸出6，2025-11-1是星期六
+  $monthDays = date("t", $base_timestamp); //11月有30天
+  $monthWeeks = ceil(($monthDays + $firstWeek) / 7); //30天 + 6 = 36，36/7=5.14，ceil取6，畫6周
+  $tableFirstDay = strtotime("-$firstWeek days", strtotime($firstDayMonth));
+  //2025-11-1減6天，第一格是2025-10-26的秒數
+  ?>
 
 
   <div class="two-pane-container">
@@ -70,12 +74,12 @@
 
       <div class="mini-days">
         <?php
-                for ($i = 0; $i < 42; $i++) {
-                    $days = strtotime("+$i day", $tableFirstDay);
-                    $color = (date('m', $days) !== $month) ? 'color:lightskyblue' : '';
-                    echo '<div style=' . $color . '>' . date('d', $days) . '</div>';
-                }
-                ?>
+        for ($i = 0; $i < 42; $i++) {
+          $days = strtotime("+$i day", $tableFirstDay);
+          $color = (date('m', $days) !== $month) ? 'color:lightskyblue' : '';
+          echo '<div style=' . $color . '>' . date('d', $days) . '</div>';
+        }
+        ?>
       </div>
       <!-- 點擊後，顯示當前時間 -->
       <a href="?month=<?php echo date('m'); ?>&year=<?php echo date('Y'); ?>" class="door-box-link">
@@ -122,16 +126,16 @@
 
       <div class="days">
         <?php
-                for ($i = 0; $i < 42; $i++) {
-                    $days = strtotime("+$i day", $tableFirstDay);
-                    $color = (date('m', $days) !== $month) ? 'color:lightgray' : '';
-                    $today = (date("Y-m-d", $days)) == date("Y-m-d") ? 'today' : '';
-                    echo '<div class="day-item ' . $today . '" data-date="' . date('Y-m-d', $days) . '" date-id=".$." style="' . $color . '">
+        for ($i = 0; $i < 42; $i++) {
+          $days = strtotime("+$i day", $tableFirstDay);
+          $color = (date('m', $days) !== $month) ? 'color:lightgray' : '';
+          $today = (date("Y-m-d", $days)) == date("Y-m-d") ? 'today' : '';
+          echo '<div class="day-item ' . $today . '" data-date="' . date('Y-m-d', $days) . '" date-id=".$." style="' . $color . '">
         ' . date('d', $days) . '
       </div>';
-                }
-                "</div>";
-                ?>
+        }
+        "</div>";
+        ?>
         <!-- 自訂彈出視窗 (新增待辦事項) -->
         <div id="custom-modal" class="modal-overlay">
           <div class="modal-content">
