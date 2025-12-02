@@ -1,7 +1,19 @@
 <?php
+// ===== 純手工讀 .env（完全不用 composer）=====
+if (file_exists(__DIR__ . '/.env')) {
+    $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue; // 跳過註解
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $_ENV[trim($key)] = trim($value);
+        }
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 
-$API_KEY = 'CWA-FAKE'; // 假金鑰
+$API_KEY = $_ENV['CWA_API_KEY'];
 $url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-063?Authorization={$API_KEY}";
 
 $ch = curl_init();
