@@ -1,72 +1,79 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-$API_KEY = 'CWA-FAKE'; 
-
-$locationCode = 'F-D0047-063'; // 台北市
-$url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/{$locationCode}?Authorization={$API_KEY}&format=JSON&elementName=Wx,MaxT";
+$API_KEY = 'CWA-FAKE'; // 假金鑰
+$url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-063?Authorization={$API_KEY}";
 
 $ch = curl_init();
 curl_setopt_array($ch, [
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT => 15,
+    CURLOPT_TIMEOUT => 30,
     CURLOPT_SSL_VERIFYPEER => false,
     CURLOPT_USERAGENT => 'Mozilla/5.0'
 ]);
 
 $response = curl_exec($ch);
+curl_close($ch);
 
-// 直接輸出（如果還是有問題會看到原始資料）
 $data = json_decode($response, true);
+
+if (!$data || $data['success'] !== 'true') {
+    echo json_encode(['error' => 'API 失敗']);
+    exit;
+}
+
+$location = $data['records']['Locations'][0]['Location'][0] ?? null;
+if (!$location) {
+    echo json_encode([]);
+    exit;
+}
+
+// 找出兩個關鍵元素
+$descTimes = [];  // 天氣預報綜合描述
+$maxTTimes = [];  // 最高溫度
+
+foreach ($location['WeatherElement'] as $el) {
+    if ($el['ElementName'] === '天氣預報綜合描述') $descTimes = $el['Time'];
+    if ($el['ElementName'] === '最高溫度')         $maxTTimes = $el['Time'];
+}
 
 $forecasts = [];
 
-if (isset($data['success']) && $data['success'] === 'true') {
-    $locations = $data['records']['locations'][0]['location'] ?? [];
+foreach ($descTimes as $i => $time) {
+    $date = substr($time['StartTime'], 0, 10);
+    if (isset($forecasts[$date])) continue; // 每天只取一筆
+
+    // 1. 取天氣描述（從 WeatherDescription）
+    $desc = $time['ElementValue'][0]['WeatherDescription'] ?? '未知天氣';
     
-    foreach ($locations as $location) {
-        if ($location['locationName'] !== '臺北市') continue; // 確保是台北市
-        
-        $wxElement = null;
-        $maxTElement = null;
-        
-        foreach ($location['weatherElement'] as $el) {
-            if ($el['elementName'] === 'Wx') $wxElement = $el;
-            if ($el['elementName'] === 'MaxT') $maxTElement = $el;
-        }
-        
-        if (!$wxElement) continue;
-        
-        foreach ($wxElement['time'] as $i => $time) {
-            $date = substr($time['startTime'], 0, 10);
-            if (isset($forecasts[$date])) continue; // 每天只取第一筆
-            
-            $wx = $time['elementValue'][0]['value'] ?? '未知';
-            $maxT = '??';
-            
-            if ($maxTElement && isset($maxTElement['time'][$i])) {
-                $maxT = $maxTElement['time'][$i]['elementValue'][0]['value'] ?? '??';
-            }
-            
-            $icon = match(true) {
-                str_contains($wx, '晴') => '晴天',
-                str_contains($wx, '多雲') => '多雲',
-                str_contains($wx, '陰') => '陰天',
-                str_contains($wx, '雨') => '雨天',
-                str_contains($wx, '雷') => '雷雨',
-                default => '雲',
-            };
-            
-            $forecasts[$date] = [
-                'date' => $date,
-                'icon' => $icon,
-                'maxT' => $maxT
-            ];
-        }
-        break; // 找到台北市就結束
+    // 2. 取最高溫（從 MaxTemperature）
+    $maxT = '??';
+    if (isset($maxTTimes[$i]['ElementValue'][0]['MaxTemperature'])) {
+        $maxT = $maxTTimes[$i]['ElementValue'][0]['MaxTemperature'];
     }
+
+    // 3. 從長描述中判斷 icon（超穩定方式）
+    $icon = '雲';
+    if (strpos($desc, '晴') !== false && strpos($desc, '雲') === false && strpos($desc, '雨') === false) {
+        $icon = '晴天';
+    } elseif (strpos($desc, '多雲') !== false || strpos($desc, '晴時多雲') !== false || strpos($desc, '多雲時晴') !== false) {
+        $icon = '多雲';
+    } elseif (strpos($desc, '陰') !== false) {
+        $icon = '陰天';
+    } elseif (strpos($desc, '雨') !== false || strpos($desc, '陣雨') !== false) {
+        $icon = '雨天';
+    } elseif (strpos($desc, '雷') !== false) {
+        $icon = '雷雨';
+    }
+
+    $forecasts[$date] = [
+        'date' => $date,
+        'weather' => $desc,
+        'icon' => $icon,
+        'maxT' => $maxT . '°C'
+    ];
 }
 
-echo json_encode(array_values($forecasts));
+echo json_encode(array_values($forecasts), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 ?>

@@ -211,6 +211,7 @@
                 </div>
                 <script>
                 // ==================== 全域變數 ====================
+
                 let weatherData = {};
                 let todos = [];
                 const STORAGE_KEY = 'monsterCalendarTodos_v22';
@@ -222,140 +223,105 @@
                 let editingTodoId = null;
                 let draggedTodoIndex = null;
 
-                // ====================　重新載入 ====================
+                // ==================== DOM 載入完成後執行 ====================
                 document.addEventListener('DOMContentLoaded', () => {
-
+                    // ------- 抓天氣 -------
                     fetch('weather.php')
                         .then(r => r.json())
                         .then(data => {
                             console.log('氣象局資料抓到了！', data);
-
-                            // 判斷是否有真實資料
                             if (Array.isArray(data) && data.length > 0) {
-                                // 有資料 → 用真實天氣 + 自動轉成圖示
                                 data.forEach(day => {
                                     weatherData[day.date] = {
-                                        icon: convertToIcon(day.icon || day.wx || '未知'),
-                                        maxT: day.maxT || '??'
+                                        icon: day.icon,
+                                        maxT: day.maxT
                                     };
                                 });
                             } else {
-                                // 空陣列 → 啟用假資料
-                                console.warn('氣象局暫無資料，啟動怪獸備援天氣系統');
-                                applyBackupWeatherWithIcons();
+                                applyBackupWeather();
                             }
                             renderWeather();
                         })
                         .catch(err => {
-                            // 完全失敗也跳備援
-                            console.warn('API 連線失敗，啟動怪獸備援天氣！', err);
-                            applyBackupWeatherWithIcons();
+                            console.warn('抓天氣失敗，啟動備援', err);
+                            applyBackupWeather();
                             renderWeather();
-                        })
-                        .finally(() => {
-                            loadTodos();
-                            renderTodos();
-                            attachCalendarCellListeners();
-                            attachColorButtonListeners();
                         });
 
-                    // 備援假資料
-                    function applyBackupWeatherWithIcons() {
+                    // ------- 備援天氣 -------
+                    function applyBackupWeather() {
                         weatherData = {
                             '2025-12-02': {
-                                icon: '晴天',
-                                maxT: 26
+                                icon: '多雲',
+                                maxT: '25°C'
                             },
                             '2025-12-03': {
-                                icon: '多雲',
-                                maxT: 24
+                                icon: '雨天',
+                                maxT: '22°C'
                             },
                             '2025-12-04': {
                                 icon: '雨天',
-                                maxT: 20
+                                maxT: '19°C'
                             },
                             '2025-12-05': {
-                                icon: '雷雨',
-                                maxT: 22
+                                icon: '多雲',
+                                maxT: '20°C'
                             },
                             '2025-12-06': {
-                                icon: '晴天',
-                                maxT: 27
+                                icon: '多雲',
+                                maxT: '23°C'
                             },
                             '2025-12-07': {
-                                icon: '多雲',
-                                maxT: 25
+                                icon: '晴天',
+                                maxT: '24°C'
                             },
                             '2025-12-08': {
-                                icon: '陰天',
-                                maxT: 23
-                            },
-                            '2025-12-09': {
-                                icon: '雨天',
-                                maxT: 21
-                            },
-                            '2025-12-10': {
-                                icon: '大雨',
-                                maxT: 19
+                                icon: '多雲',
+                                maxT: '23°C'
                             }
                         };
-                        console.log('%c怪獸電力公司備援天氣已啟動！毛怪正在為您遮陽～',
-                            'color:#6bc4e8; font-size:14px; font-weight:bold;');
                     }
-                });
 
-                // ==================== 氣象局文字 → 官方圖示 ===================
-                function getCWAIcon(text) {
-                    if (!text) return '101.png'; // 預設多雲
+                    // ------- 圖示轉換 -------
+                    function getCWAIcon(name) {
+                        const map = {
+                            '晴天': '100.png',
+                            '多雲': '101.png',
+                            '陰天': '102.png',
+                            '雨天': '103.png',
+                            '雷雨': '105.png'
+                        };
+                        return map[name] || '101.png';
+                    }
 
-                    const str = text.toLowerCase(); // 轉小寫方便比對
+                    // ------- 畫天氣 -------
+                    function renderWeather() {
+                        document.querySelectorAll('.day-item').forEach(cell => {
+                            const date = cell.dataset.date;
+                            if (!weatherData[date]) return;
 
-                    // 優先順序：越明確越前面
-                    if (str.includes('豪雨') || str.includes('大豪雨') || str.includes('超大豪雨')) return '104.png';
-                    if (str.includes('大雨') || str.includes('豪大雨')) return '104.png';
-                    if (str.includes('雷雨') || str.includes('雷陣雨') || str.includes('打雷')) return '105.png';
-                    if (str.includes('陣雨') || str.includes('短暫雨') || str.includes('驟雨')) return '103.png';
-                    if (str.includes('陰天') || str.includes('陰')) return '102.png';
-                    if (str.includes('多雲') || str.includes('晴時多雲') || str.includes('多雲時晴') || str.includes('晴間多雲'))
-                        return '101.png';
-                    if (str.includes('晴')) return '100.png';
-
-                    // 再保險一次
-                    if (str.includes('雨')) return '103.png';
-                    if (str.includes('雲')) return '101.png';
-
-                    return '101.png'; // 最後保底：多雲
-                }
-
-                // ==================== 畫天氣 ===================
-                function renderWeather() {
-                    document.querySelectorAll('.day-item').forEach(cell => {
-                        const date = cell.dataset.date;
-                        if (weatherData[date]) {
-                            const w = weatherData[date];
-
-                            let weatherEl = cell.querySelector('.weather-info');
-                            if (!weatherEl) {
-                                weatherEl = document.createElement('div');
-                                weatherEl.className = 'weather-info';
-                                cell.appendChild(weatherEl);
+                            let info = cell.querySelector('.weather-info');
+                            if (!info) {
+                                info = document.createElement('div');
+                                info.className = 'weather-info';
+                                cell.appendChild(info);
                             }
 
-                            // 真實 API 用氣象局文字直接轉圖示
-                            // 備援假資料我們用 icon 名稱，也能完美對應
-                            const iconName = w.icon || '多雲'; // 真實 API 是文字，假資料是 '晴天' 之類的
-                            const iconFile = getCWAIcon(iconName); // ← 這行永遠對得到！
+                            const w = weatherData[date];
+                            info.innerHTML = `
+                <div style="text-align:right; padding:2px 4px 0 0; line-height:1;">
+                    <img src="./image/${getCWAIcon(w.icon)}" style="width:26px; height:26px; vertical-align:-7px;">
+                    <span style="font-size:10px; opacity:0.8; margin-left:2px;">${w.maxT}</span>
+                </div>`;
+                        });
+                    }
 
-                            weatherEl.innerHTML = `
-                <div style="text-align:right; line-height:1; padding-right:4px; padding-top:2px;">
-                    <img src="./image/${iconFile}" 
-                         style="width:26px; height:26px; vertical-align:-7px; image-rendering: crisp-edges;">
-                    <span style="font-size:10px; opacity:0.8; margin-left:3px;">${w.maxT}°C</span>
-                </div>
-            `;
-                        }
-                    });
-                }
+                    loadTodos();
+                    renderTodos();
+                    attachCalendarCellListeners();
+                    attachColorButtonListeners();
+                    attachDropListeners();
+                });
 
                 // ==================== 儲存 & 讀取資料 ====================
                 function saveTodos() {
